@@ -1,0 +1,440 @@
+// ---------------------------------------------------------------------------
+// Commercial page content model. Drives the [slug] routes under each section.
+// Facts are drawn from the Phase 0/1 verified capabilities. Anything not yet
+// confirmed is expressed WITHOUT a factual claim and flagged via `gate` /
+// `ownerDeps`. No pricing, radius, inventory, or brand claims are fabricated.
+// ---------------------------------------------------------------------------
+export type Gate =
+  | "READY FOR STAGING"
+  | "READY FOR OWNER REVIEW"
+  | "READY FOR COMPLIANCE REVIEW"
+  | "BLOCKED BY DATA"
+  | "BLOCKED BY OWNER APPROVAL";
+
+export type Faq = { q: string; a: string };
+export type Kind = "commercial" | "equipment" | "chemicals";
+
+export interface Page {
+  section: string;
+  slug: string;
+  tier: 1 | 2 | 3 | 4 | 5;
+  kind: Kind;
+  h1: string;
+  metaTitle: string;
+  metaDescription: string;
+  positioning: string;
+  audience: string;
+  fulfillment: string[];
+  process: string[];
+  quoteInfo?: string[];
+  related: { label: string; href: string }[];
+  resources?: { label: string; href: string }[];
+  primaryCta: { label: string; href: string };
+  faq: Faq[];
+  schema: "Service" | "Product" | "Store";
+  gate: Gate;
+  ownerDeps?: string[];
+}
+
+const quoteCta = (form: string, label = "Request a Quote") => ({ label, href: `/request-a-quote?form=${form}` });
+
+export const PAGES: Page[] = [
+  // ---------------- FERTILIZER (Tier 1) ----------------
+  {
+    section: "fertilizer", slug: "custom-blends", tier: 1, kind: "commercial",
+    h1: "Custom Fertilizer Blending",
+    metaTitle: "Custom Fertilizer Blending in South Carolina",
+    metaDescription:
+      "Custom-blended fertilizer built to your soil and crop, bagged or bulk, picked up or delivered. Family-owned in Saluda since 1976.",
+    positioning:
+      "We blend fertilizer to match your soil test, crop, and target analysis — not a shelf product. Tell us what you are growing and we will build the blend.",
+    audience: "Commercial farms, pasture and hay producers, food-plot managers, and growers who need the right analysis, not the closest bag.",
+    fulfillment: ["Custom N-P-K blends", "Bagged (50 lb), pallets, one-ton totes, or bulk", "Customer pickup or delivery", "Pull-behind spreader use or spreader-truck service"],
+    process: ["Send your crop, acreage, and target analysis (or soil test)", "We recommend and blend to spec", "Choose packaging and pickup or delivery", "We confirm and schedule"],
+    quoteInfo: ["Crop or intended use", "Acreage", "Desired analysis or blend", "Quantity", "Packaging (bag / pallet / tote / bulk)", "Pickup or delivery", "Soil test (optional upload)"],
+    related: [
+      { label: "Bulk Fertilizer", href: "/fertilizer/bulk" },
+      { label: "Pasture Fertilizer", href: "/fertilizer/pasture" },
+      { label: "Fertilizer Delivery", href: "/delivery/fertilizer-delivery" },
+    ],
+    resources: [{ label: "Understanding N-P-K", href: "/resources" }, { label: "Custom vs. standard blends", href: "/resources" }],
+    primaryCta: quoteCta("fertilizer", "Request a Custom Blend"),
+    faq: [
+      { q: "Do I need a soil test?", a: "It helps us blend precisely, but it is not required — we can work from your crop and goals and recommend a starting analysis." },
+      { q: "What packaging can I get a custom blend in?", a: "50-lb bags, pallets, one-ton totes, or bulk — whichever fits your operation." },
+      { q: "Can you deliver or spread it?", a: "Yes — pickup, flatbed delivery, and spreader-truck service are available." },
+    ],
+    schema: "Service", gate: "READY FOR STAGING",
+    ownerDeps: ["Confirm which blends are standard vs. custom", "Confirm turnaround time before publishing any promise"],
+  },
+  {
+    section: "fertilizer", slug: "bulk", tier: 1, kind: "commercial",
+    h1: "Bulk Fertilizer Supplier",
+    metaTitle: "Bulk Fertilizer Supplier — South Carolina",
+    metaDescription: "Bulk fertilizer blended and loaded by the ton, picked up or delivered by flatbed. Custom analyses for row crops, pasture, and hay.",
+    positioning: "Buy fertilizer by the ton. We blend to your analysis, load bulk, and get it to your operation — pickup or delivery.",
+    audience: "Commercial farms and larger operations buying by volume.",
+    fulfillment: ["Bulk blends to your analysis", "Bulk loading", "24-ton flatbed delivery", "Pull-behind spreader use or spreader-truck service"],
+    process: ["Tell us the blend and tonnage", "We quote and schedule", "Pickup or delivery", "Spread it yourself or let us"],
+    quoteInfo: ["Blend / analysis", "Tonnage", "Pickup or delivery", "Delivery location", "Preferred date"],
+    related: [
+      { label: "Custom Blends", href: "/fertilizer/custom-blends" },
+      { label: "One-Ton Totes", href: "/fertilizer/one-ton-totes" },
+      { label: "Fertilizer Delivery", href: "/delivery/fertilizer-delivery" },
+    ],
+    resources: [{ label: "Bulk vs. bagged fertilizer", href: "/resources" }],
+    primaryCta: quoteCta("fertilizer"),
+    faq: [
+      { q: "Is there a minimum order?", a: "Minimums depend on the blend and delivery — tell us what you need and we will confirm on your quote." },
+      { q: "How is bulk delivered?", a: "By flatbed (up to 24 tons) or you can pick up. We can also spread with our spreader truck." },
+    ],
+    schema: "Service", gate: "READY FOR STAGING",
+    ownerDeps: ["Confirm minimum order sizes", "Confirm delivery radius before service-area claims"],
+  },
+  {
+    section: "fertilizer", slug: "bagged", tier: 1, kind: "commercial",
+    h1: "Bagged Fertilizer (50 lb) & Pallets",
+    metaTitle: "Bagged Fertilizer & Pallets — Saluda, SC",
+    metaDescription: "Fertilizer in 50-lb bags and by the pallet — standard and custom blends, pickup or delivery.",
+    positioning: "Fertilizer in 50-lb bags and full pallets — the same blends the pros use, packaged for your operation or your yard.",
+    audience: "Farms, landscapers, food-plot and backyard growers who want bagged product.",
+    fulfillment: ["Individual 50-lb bags", "Full pallets", "Standard and custom blends", "Pickup or delivery"],
+    process: ["Pick your blend and quantity", "Bags or pallets", "Pickup or delivery"],
+    quoteInfo: ["Blend", "Number of bags or pallets", "Pickup or delivery"],
+    related: [{ label: "Pallets", href: "/fertilizer/pallets" }, { label: "One-Ton Totes", href: "/fertilizer/one-ton-totes" }, { label: "Custom Blends", href: "/fertilizer/custom-blends" }],
+    primaryCta: quoteCta("fertilizer"),
+    faq: [{ q: "Can I mix blends on a pallet?", a: "Ask us — we can usually accommodate mixed pallets depending on the blends and quantity." }],
+    schema: "Product", gate: "READY FOR STAGING",
+  },
+  {
+    section: "fertilizer", slug: "pallets", tier: 1, kind: "commercial",
+    h1: "Fertilizer by the Pallet",
+    metaTitle: "Fertilizer Pallets — South Carolina",
+    metaDescription: "Buy fertilizer by the pallet — bagged blends palletized for efficient pickup or delivery.",
+    positioning: "Pallet quantities of bagged fertilizer — efficient for larger jobs without going full bulk.",
+    audience: "Landscapers, larger growers, and dealers moving volume in bags.",
+    fulfillment: ["Palletized 50-lb bags", "Standard and custom blends", "Pickup or delivery"],
+    process: ["Tell us blend and pallet count", "We quote and schedule", "Pickup or delivery"],
+    quoteInfo: ["Blend", "Number of pallets", "Pickup or delivery", "Delivery location"],
+    related: [{ label: "Bagged Fertilizer", href: "/fertilizer/bagged" }, { label: "One-Ton Totes", href: "/fertilizer/one-ton-totes" }],
+    primaryCta: quoteCta("fertilizer"),
+    faq: [{ q: "How many bags per pallet?", a: "It varies by product — we will confirm the count on your quote." }],
+    schema: "Product", gate: "READY FOR STAGING",
+  },
+  {
+    section: "fertilizer", slug: "one-ton-totes", tier: 1, kind: "commercial",
+    h1: "One-Ton Bags (Totes)",
+    metaTitle: "One-Ton Fertilizer Bags / Totes — SC",
+    metaDescription: "One-ton fertilizer bags (totes) — a clean middle ground between bags and bulk, custom-blended and delivered.",
+    positioning: "One-ton bags (totes) give you bulk quantity with easier handling — blended to your spec and delivered.",
+    audience: "Farms wanting ton quantities with tote handling.",
+    fulfillment: ["One-ton totes", "Custom or standard blends", "Pickup or delivery"],
+    process: ["Tell us blend and number of totes", "We quote and schedule", "Pickup or delivery"],
+    quoteInfo: ["Blend / analysis", "Number of totes", "Pickup or delivery", "Delivery location"],
+    related: [{ label: "Bulk Fertilizer", href: "/fertilizer/bulk" }, { label: "Custom Blends", href: "/fertilizer/custom-blends" }],
+    primaryCta: quoteCta("fertilizer"),
+    faq: [{ q: "Do you take totes back?", a: "Ask us about tote handling when you order — we will explain the options." }],
+    schema: "Product", gate: "READY FOR STAGING",
+  },
+  {
+    section: "fertilizer", slug: "pasture", tier: 1, kind: "commercial",
+    h1: "Pasture Fertilizer",
+    metaTitle: "Pasture Fertilizer — South Carolina",
+    metaDescription: "Fertilizer and lime for cattle pasture — the right analysis and timing for strong forage, delivered or picked up.",
+    positioning: "Keep your pasture productive with the right nutrients and lime, timed for the season and blended for your fields.",
+    audience: "Cattle and livestock producers, pasture managers.",
+    fulfillment: ["Pasture-specific blends", "Agricultural lime", "Bulk, tote, or bagged", "Delivery and spreading available"],
+    process: ["Tell us acreage and goals (or soil test)", "We recommend a blend and lime plan", "Choose packaging and delivery"],
+    quoteInfo: ["Acreage", "Current soil test (optional)", "Blend / goals", "Pickup or delivery"],
+    related: [{ label: "Agricultural Lime", href: "/delivery/agricultural-lime" }, { label: "Hay-Field Fertilizer", href: "/fertilizer/hay-fields" }],
+    resources: [{ label: "Pasture & hay fertility guide", href: "/resources" }],
+    primaryCta: quoteCta("fertilizer"),
+    faq: [{ q: "When should I fertilize pasture?", a: "Timing depends on your forage and season — see our pasture guide, or call and we will help you plan." }],
+    schema: "Service", gate: "READY FOR OWNER REVIEW",
+    ownerDeps: ["Confirm pasture fertility is a core promoted use-case"],
+  },
+  {
+    section: "fertilizer", slug: "hay-fields", tier: 1, kind: "commercial",
+    h1: "Hay-Field Fertilizer",
+    metaTitle: "Fertilizer for Hay Fields — SC",
+    metaDescription: "Replace what hay removes — fertilizer and lime blended for hay production, delivered by the ton.",
+    positioning: "Hay pulls a lot of nutrients off your fields. We blend to replace them and keep your cuttings strong.",
+    audience: "Hay producers.",
+    fulfillment: ["Hay-field blends", "Lime", "Bulk or tote", "Delivery available"],
+    process: ["Tell us acreage and cuttings", "We recommend and blend", "Delivery or pickup"],
+    quoteInfo: ["Acreage", "Cuttings per year", "Soil test (optional)", "Quantity", "Pickup or delivery"],
+    related: [{ label: "Pasture Fertilizer", href: "/fertilizer/pasture" }, { label: "Agricultural Lime", href: "/delivery/agricultural-lime" }],
+    resources: [{ label: "Nutrients removed by hay", href: "/resources" }],
+    primaryCta: quoteCta("fertilizer"),
+    faq: [{ q: "How much fertilizer does hay need?", a: "It depends on yield and soil — our guide covers the basics, and we will size it to your fields on a quote." }],
+    schema: "Service", gate: "READY FOR OWNER REVIEW",
+    ownerDeps: ["Confirm hay fertility is a core promoted use-case"],
+  },
+  {
+    section: "fertilizer", slug: "commercial-orders", tier: 1, kind: "commercial",
+    h1: "Commercial Fertilizer Orders",
+    metaTitle: "Commercial Fertilizer Orders — South Carolina",
+    metaDescription: "Volume fertilizer for commercial operations — custom blends, bulk and tote quantities, scheduled delivery.",
+    positioning: "For operations buying at volume: custom blends, bulk and tote quantities, and scheduled delivery — with a real person on your account.",
+    audience: "Commercial farms and volume buyers.",
+    fulfillment: ["Custom blends at volume", "Bulk and totes", "Scheduled flatbed delivery", "Spreader-truck service"],
+    process: ["Tell us your program and volume", "We quote and schedule", "Deliver and reorder easily"],
+    quoteInfo: ["Blends / analyses", "Estimated seasonal volume", "Delivery locations", "Preferred schedule"],
+    related: [{ label: "Bulk Fertilizer", href: "/fertilizer/bulk" }, { label: "Commercial Accounts", href: "/request-a-quote?form=commercial" }],
+    primaryCta: quoteCta("commercial", "Start a Commercial Order"),
+    faq: [{ q: "Can I set up an account?", a: "Ask us about commercial accounts — availability and terms are confirmed with our team." }],
+    schema: "Service", gate: "READY FOR OWNER REVIEW",
+    ownerDeps: ["Confirm commercial-account offering and terms"],
+  },
+
+  // ---------------- DELIVERY (Tier 1) ----------------
+  {
+    section: "delivery", slug: "fertilizer-delivery", tier: 1, kind: "commercial",
+    h1: "Fertilizer Delivery",
+    metaTitle: "Fertilizer Delivery — South Carolina",
+    metaDescription: "Fertilizer delivered to your operation — up to 24-ton flatbed loads, bulk, totes, or pallets. Pickup also available.",
+    positioning: "We bring the fertilizer to you — bulk, totes, or pallets — up to 24 tons on a flatbed.",
+    audience: "Farms and operations that need product delivered.",
+    fulfillment: ["24-ton flatbed delivery", "Bulk, tote, or pallet loads", "Customer pickup option", "Spreader-truck service available"],
+    process: ["Tell us product, quantity, and delivery location", "We quote delivery and schedule", "We deliver"],
+    quoteInfo: ["Product", "Quantity", "Delivery location", "Field/site access", "Preferred date"],
+    related: [{ label: "Spreader-Truck Service", href: "/delivery/spreader-truck-service" }, { label: "Bulk Fertilizer", href: "/fertilizer/bulk" }],
+    primaryCta: quoteCta("delivery", "Request Delivery Pricing"),
+    faq: [{ q: "How far do you deliver?", a: "Delivery areas are confirmed with our team — tell us your location and we will let you know." }],
+    schema: "Service", gate: "READY FOR STAGING",
+    ownerDeps: ["Confirm delivery radius and states before publishing any coverage claim", "Confirm minimum load for delivery"],
+  },
+  {
+    section: "delivery", slug: "spreader-truck-service", tier: 1, kind: "commercial",
+    h1: "Spreader-Truck Service",
+    metaTitle: "Fertilizer Spreader-Truck Service — SC",
+    metaDescription: "Let us spread it for you. Our spreader truck applies your bulk blend to your fields — or use our pull-behind spreaders.",
+    positioning: "Skip the spreading. Our spreader truck comes to your property and applies your blend — or borrow our pull-behind spreaders for your tractor.",
+    audience: "Growers who want application handled.",
+    fulfillment: ["Spreader-truck application", "Pull-behind spreader use with bulk blends", "Paired with delivery"],
+    process: ["Tell us the blend, acreage, and field access", "We quote and schedule", "We spread"],
+    quoteInfo: ["Product / blend", "Acreage", "Field access (gate width, ground conditions)", "Preferred date"],
+    related: [{ label: "Fertilizer Delivery", href: "/delivery/fertilizer-delivery" }, { label: "Agricultural Lime", href: "/delivery/agricultural-lime" }],
+    primaryCta: quoteCta("delivery", "Request Spreading"),
+    faq: [{ q: "Can I spread it myself?", a: "Yes — you can use our pull-behind spreaders with our bulk blends, or we can spread it for you." }],
+    schema: "Service", gate: "READY FOR STAGING",
+  },
+  {
+    section: "delivery", slug: "agricultural-lime", tier: 1, kind: "commercial",
+    h1: "Agricultural Lime & Spreading",
+    metaTitle: "Agricultural Lime Supplier & Spreading — SC",
+    metaDescription: "Agricultural lime for pasture, hay, and row crops — delivered and, where available, spread for you.",
+    positioning: "Lime corrects your soil pH so fertilizer works. We supply agricultural lime and can deliver it to your fields.",
+    audience: "Pasture, hay, and row-crop growers.",
+    fulfillment: ["Agricultural lime", "Bulk delivery", "Spreading (where available)"],
+    process: ["Tell us acreage and soil pH (or soil test)", "We quote lime and delivery", "Deliver / spread"],
+    quoteInfo: ["Acreage", "Soil test / pH (optional)", "Delivery location", "Spreading needed?"],
+    related: [{ label: "Pasture Fertilizer", href: "/fertilizer/pasture" }, { label: "Spreader-Truck Service", href: "/delivery/spreader-truck-service" }],
+    resources: [{ label: "Lime timing for pasture", href: "/resources" }],
+    primaryCta: quoteCta("delivery", "Request Lime Delivery"),
+    faq: [{ q: "What kind of lime do you carry?", a: "Ask us — we will confirm the lime products currently available and what fits your soil." }],
+    schema: "Service", gate: "READY FOR OWNER REVIEW",
+    ownerDeps: ["Confirm lime forms carried (ag/pelletized/bulk) and spreading availability"],
+  },
+
+  // ---------------- EQUIPMENT (Tier 2) ----------------
+  {
+    section: "equipment", slug: "bush-hog", tier: 2, kind: "equipment",
+    h1: "Bush Hog Equipment",
+    metaTitle: "Authorized Bush Hog Dealer — South Carolina",
+    metaDescription: "Authorized Bush Hog dealer in Saluda, SC — rotary cutters, hay equipment, and implements. Tell us your tractor and job.",
+    positioning: "As an authorized Bush Hog dealer, we help you match the right machine to your tractor and your land.",
+    audience: "Farms, landowners, and land managers buying equipment.",
+    fulfillment: ["Rotary cutters", "Hay equipment", "Implements", "Parts support"],
+    process: ["Tell us your tractor and job", "We recommend the right model", "We confirm availability and details"],
+    related: [{ label: "Rotary Cutters", href: "/equipment/rotary-cutters" }, { label: "Great Plains", href: "/equipment/great-plains" }, { label: "Bush Hog Parts", href: "/parts/bush-hog" }],
+    resources: [{ label: "Rotary cutter buying guide", href: "/resources" }],
+    primaryCta: quoteCta("equipment", "Request Equipment Info"),
+    faq: [{ q: "Are you an authorized dealer?", a: "Yes — Rodgers Fertilizer is an authorized Bush Hog dealer." }],
+    schema: "Service", gate: "READY FOR STAGING",
+    ownerDeps: ["Confirm in-stock vs. special-order scope", "Do not claim financing/used/warranty/service without approval"],
+  },
+  {
+    section: "equipment", slug: "rotary-cutters", tier: 2, kind: "equipment",
+    h1: "Bush Hog Rotary Cutters",
+    metaTitle: "Bush Hog Rotary Cutter Dealer — SC (4–20 ft)",
+    metaDescription: "Bush Hog rotary cutters in 4–6 ft, 7–10 ft, and 12–20 ft widths. Match the cutter to your tractor horsepower — we help.",
+    positioning: "Rotary cutters from 4 to 20 feet. The right width depends on your tractor and your land — tell us both and we will point you to the right machine. (Previously labeled “Movers” on our old site — corrected to Rotary Cutters.)",
+    audience: "Landowners and operators cutting pasture, fields, and rough.",
+    fulfillment: ["4–6 ft cutters", "7–10 ft cutters", "12–20 ft cutters", "Parts support"],
+    process: ["Tell us tractor horsepower and cutting width", "We recommend a model", "We confirm details and availability"],
+    related: [{ label: "Bush Hog Equipment", href: "/equipment/bush-hog" }, { label: "Rotary Cutter Parts", href: "/parts/rotary-cutter-parts" }, { label: "Hay Equipment", href: "/equipment/hay-equipment" }],
+    resources: [{ label: "Cutter width by horsepower", href: "/resources" }],
+    primaryCta: quoteCta("equipment", "Request Equipment Info"),
+    faq: [
+      { q: "What size cutter do I need?", a: "It depends on your tractor horsepower and the job — our guide explains the ranges, and we will confirm the right fit." },
+      { q: "Single or multi-spindle?", a: "Multi-spindle cutters handle wider widths and heavier material — we will help you decide based on your acreage." },
+    ],
+    schema: "Product", gate: "READY FOR STAGING",
+    ownerDeps: ["Confirm exact width bands stocked/orderable"],
+  },
+  {
+    section: "equipment", slug: "hay-equipment", tier: 2, kind: "equipment",
+    h1: "Hay Equipment",
+    metaTitle: "Bush Hog Hay Equipment — South Carolina",
+    metaDescription: "Hay equipment from Bush Hog — tell us your operation and we will help you spec the right tools.",
+    positioning: "Hay tools to match your operation — we help you spec what fits your tractor and acreage.",
+    audience: "Hay producers.",
+    fulfillment: ["Bush Hog hay equipment", "Implements", "Parts support"],
+    process: ["Tell us your operation", "We recommend", "We confirm availability"],
+    related: [{ label: "Rotary Cutters", href: "/equipment/rotary-cutters" }, { label: "Implements", href: "/equipment/implements" }],
+    primaryCta: quoteCta("equipment", "Request Equipment Info"),
+    faq: [{ q: "What hay equipment do you carry?", a: "Ask us — we will confirm the current lineup and what suits your operation." }],
+    schema: "Service", gate: "READY FOR OWNER REVIEW",
+    ownerDeps: ["Confirm hay-equipment lineup"],
+  },
+  {
+    section: "equipment", slug: "implements", tier: 2, kind: "equipment",
+    h1: "Implements",
+    metaTitle: "Farm Implements — Bush Hog & More, SC",
+    metaDescription: "Implements to work your land — tell us your tractor and task and we will help you match the right tool.",
+    positioning: "The attachments that get the work done — matched to your tractor and task.",
+    audience: "Landowners and operators.",
+    fulfillment: ["Bush Hog implements", "Compatibility guidance", "Parts support"],
+    process: ["Tell us your tractor and task", "We recommend", "We confirm availability"],
+    related: [{ label: "Bush Hog Equipment", href: "/equipment/bush-hog" }, { label: "Great Plains", href: "/equipment/great-plains" }],
+    primaryCta: quoteCta("equipment", "Request Equipment Info"),
+    faq: [{ q: "Will it fit my tractor?", a: "Tell us your tractor and we will confirm compatibility before you buy." }],
+    schema: "Service", gate: "READY FOR OWNER REVIEW",
+    ownerDeps: ["Confirm implement lineup"],
+  },
+  {
+    section: "equipment", slug: "great-plains", tier: 2, kind: "equipment",
+    h1: "Great Plains Equipment",
+    metaTitle: "Great Plains Equipment Dealer — South Carolina",
+    metaDescription: "Great Plains equipment — tell us your operation and we will help you spec and source the right unit.",
+    positioning: "We also carry Great Plains equipment — tell us your operation and we will help you spec the right unit.",
+    audience: "Row-crop and land-prep operators.",
+    fulfillment: ["Great Plains equipment", "Compatibility guidance", "Parts support"],
+    process: ["Tell us your operation and task", "We recommend", "We confirm availability"],
+    related: [{ label: "Bush Hog Equipment", href: "/equipment/bush-hog" }, { label: "Implements", href: "/equipment/implements" }],
+    primaryCta: quoteCta("equipment", "Request Equipment Info"),
+    faq: [{ q: "What Great Plains models do you carry?", a: "Ask us — we will confirm current availability and what fits your operation." }],
+    schema: "Service", gate: "READY FOR OWNER REVIEW",
+    ownerDeps: ["Confirm Great Plains lineup and dealer terms"],
+  },
+
+  // ---------------- PARTS (Tier 2) ----------------
+  {
+    section: "parts", slug: "bush-hog", tier: 2, kind: "commercial",
+    h1: "Bush Hog Parts",
+    metaTitle: "Bush Hog Parts — South Carolina",
+    metaDescription: "Get the exact Bush Hog part — blades, gearbox parts, driveline, and wear parts. Tell us your model and part number.",
+    positioning: "Get the exact Bush Hog part fast. Blades, gearbox parts, driveline, bearings, and wear parts — tell us your model and we will handle it.",
+    audience: "Bush Hog owners and operators.",
+    fulfillment: ["Blades", "Gearbox parts", "Driveline parts", "Bearings & hardware", "Wear parts"],
+    process: ["Send your model and part number (or a photo)", "We identify and confirm the part", "Pickup or arrange the part"],
+    quoteInfo: ["Model", "Serial number", "Part number", "Part description", "Quantity", "Photos"],
+    related: [{ label: "Request a Part", href: "/parts/request-a-part" }, { label: "Rotary Cutter Parts", href: "/parts/rotary-cutter-parts" }],
+    primaryCta: { label: "Request a Part", href: "/parts/request-a-part" },
+    faq: [
+      { q: "I don't know my part number.", a: "Send your model and a photo of the part — we can usually identify it for you." },
+      { q: "Can you ship parts?", a: "Ask us — pickup is always available; shipping options are confirmed with our team." },
+    ],
+    schema: "Service", gate: "READY FOR STAGING",
+    ownerDeps: ["Confirm whether parts ship or pickup-only"],
+  },
+  {
+    section: "parts", slug: "rotary-cutter-parts", tier: 2, kind: "commercial",
+    h1: "Rotary Cutter Parts",
+    metaTitle: "Bush Hog Rotary Cutter Parts — SC",
+    metaDescription: "Rotary cutter parts — blades, gearboxes, drivelines, and wear parts for Bush Hog cutters.",
+    positioning: "Keep your cutter running — blades, gearboxes, drivelines, and wear parts.",
+    audience: "Rotary cutter owners.",
+    fulfillment: ["Blades", "Gearboxes", "Drivelines", "Wear parts"],
+    process: ["Send model and part number (or photo)", "We identify and confirm", "Pickup or arrange"],
+    quoteInfo: ["Model", "Part number", "Description", "Quantity", "Photos"],
+    related: [{ label: "Bush Hog Parts", href: "/parts/bush-hog" }, { label: "Request a Part", href: "/parts/request-a-part" }],
+    primaryCta: { label: "Request a Part", href: "/parts/request-a-part" },
+    faq: [{ q: "Do you carry blades in stock?", a: "Common wear parts are frequently available — send your model and we will confirm." }],
+    schema: "Service", gate: "READY FOR STAGING",
+  },
+
+  // ---------------- SEED & FARM SUPPLIES (Tier 3/4) ----------------
+  {
+    section: "seed-farm-supplies", slug: "food-plot-seed", tier: 3, kind: "commercial",
+    h1: "Food-Plot Seed",
+    metaTitle: "Food-Plot Seed — South Carolina",
+    metaDescription: "Seasonal food-plot seed for deer and wildlife, plus the fertilizer and lime to make it produce.",
+    positioning: "Seasonal food-plot seed for deer and wildlife — and the fertilizer and lime to make it produce.",
+    audience: "Hunters and food-plot managers.",
+    fulfillment: ["Seasonal food-plot seed", "Food-plot fertilizer", "Lime", "Pickup or delivery"],
+    process: ["Tell us the season and plot size", "We recommend seed + fertility", "Pickup or delivery"],
+    related: [{ label: "Food-plot fertilizer", href: "/fertilizer/custom-blends" }, { label: "Agricultural Lime", href: "/delivery/agricultural-lime" }],
+    resources: [{ label: "SC food-plot guide", href: "/resources" }],
+    primaryCta: { label: "Check Availability", href: "/contact" },
+    faq: [{ q: "What seed for fall plots?", a: "It depends on your goals and soil — our food-plot guide covers seasonal options, and we will help you pick." }],
+    schema: "Product", gate: "READY FOR STAGING",
+    ownerDeps: ["Confirm current seed brands/varieties (seasonal)"],
+  },
+  {
+    section: "seed-farm-supplies", slug: "pasture-seed", tier: 3, kind: "commercial",
+    h1: "Pasture & Grass Seed",
+    metaTitle: "Pasture & Grass Seed — Saluda, SC",
+    metaDescription: "Pasture and grass seed for forage and cover — ask us what fits your fields and season.",
+    positioning: "Seed for pasture, forage, and cover — matched to your fields and season.",
+    audience: "Cattle and forage producers.",
+    fulfillment: ["Pasture / forage seed", "Seasonal availability", "Pickup or delivery"],
+    process: ["Tell us your fields and goals", "We recommend seed + fertility", "Pickup or delivery"],
+    related: [{ label: "Pasture Fertilizer", href: "/fertilizer/pasture" }],
+    primaryCta: { label: "Check Availability", href: "/contact" },
+    faq: [{ q: "Do you carry cover-crop seed?", a: "Ask us — availability is seasonal and we will confirm what's in stock." }],
+    schema: "Product", gate: "READY FOR OWNER REVIEW",
+    ownerDeps: ["Confirm pasture/grass/cover-crop seed range"],
+  },
+  {
+    section: "seed-farm-supplies", slug: "feed-minerals", tier: 3, kind: "commercial",
+    h1: "Feed & Minerals",
+    metaTitle: "Livestock Feed & Minerals — Saluda, SC",
+    metaDescription: "Feed and minerals for livestock and wildlife — ask us about current brands and availability.",
+    positioning: "Feed and minerals for your livestock and wildlife — ask us what we carry this season.",
+    audience: "Livestock owners.",
+    fulfillment: ["Livestock feed", "Minerals & supplements", "Pickup"],
+    process: ["Tell us species and needs", "We confirm availability", "Pickup"],
+    related: [{ label: "Farm Supplies", href: "/seed-farm-supplies/farm-supplies" }],
+    primaryCta: { label: "Check Availability", href: "/contact" },
+    faq: [{ q: "What brands of feed do you carry?", a: "Ask us — we will confirm current brands and availability." }],
+    schema: "Product", gate: "READY FOR OWNER REVIEW",
+    ownerDeps: ["Confirm feed/mineral species and brands"],
+  },
+  {
+    section: "seed-farm-supplies", slug: "farm-supplies", tier: 4, kind: "commercial",
+    h1: "Farm Supplies",
+    metaTitle: "Farm Supplies — Saluda, SC",
+    metaDescription: "Gates, hardware, parts and accessories, and seasonal farm supplies — stop in or call.",
+    positioning: "The everyday farm supplies you need — gates, hardware, parts and accessories, and seasonal items.",
+    audience: "Farmers, landowners, and homeowners.",
+    fulfillment: ["Gates & hardware", "Parts & accessories", "Seasonal products", "In-store pickup"],
+    process: ["Tell us what you need", "We confirm availability", "Stop in"],
+    related: [{ label: "Feed & Minerals", href: "/seed-farm-supplies/feed-minerals" }, { label: "Parts", href: "/parts" }],
+    primaryCta: { label: "Call or Visit", href: "/contact" },
+    faq: [{ q: "Do you carry fencing?", a: "Ask us — we carry a range of farm supplies and will confirm what's in stock." }],
+    schema: "Store", gate: "READY FOR OWNER REVIEW",
+    ownerDeps: ["Confirm farm-supply categories carried"],
+  },
+  {
+    section: "seed-farm-supplies", slug: "chemicals", tier: 4, kind: "chemicals",
+    h1: "Chemicals",
+    metaTitle: "Farm Chemicals — Saluda, SC",
+    metaDescription: "We carry farm chemicals. For product details, labels, and restricted-use items, please call or visit — handled in person.",
+    positioning: "We carry chemicals for crop protection. Because these products are label- and compliance-sensitive, we handle them in person — call or visit and we will help you get the right product safely.",
+    audience: "Growers needing crop protection.",
+    fulfillment: ["Chemicals available in-store", "Guidance from our team"],
+    process: ["Call or visit", "We confirm the right product and its label requirements", "Purchase in person"],
+    related: [{ label: "Farm Supplies", href: "/seed-farm-supplies/farm-supplies" }],
+    primaryCta: { label: "Call or Visit", href: "/contact" },
+    faq: [{ q: "Can I buy chemicals online?", a: "Chemical products are handled in person so we can confirm labels, restricted-use status, and safe use — please call or visit." }],
+    schema: "Store", gate: "READY FOR COMPLIANCE REVIEW",
+    ownerDeps: ["Verify labels, SDS, restricted-use status, licensing and disclaimers before any online listing"],
+  },
+];
+
+export const getLeaves = (section: string) => PAGES.filter((p) => p.section === section);
+export const getPage = (section: string, slug: string) =>
+  PAGES.find((p) => p.section === section && p.slug === slug);
+export const allPaths = () => PAGES.map((p) => `/${p.section}/${p.slug}`);
