@@ -1,4 +1,5 @@
 import Link from "next/link";
+import HeroGraphic from "./HeroGraphic";
 export default function Hero({
   title, subtitle, primary, secondary,
 }: {
@@ -20,6 +21,7 @@ export default function Hero({
               : <Link className="btn btn-dark btn-lg" href={secondary.href}>{secondary.label}</Link>
           )}
         </div>
+        <HeroGraphic />
       </div>
     </section>
   );

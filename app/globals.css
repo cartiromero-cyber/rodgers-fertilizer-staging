@@ -218,3 +218,124 @@ img{max-width:100%;display:block}
 .process .step{background:var(--paper);border:1px solid var(--line);border-radius:var(--r-lg);padding:20px;position:relative}
 .process .step .n{width:34px;height:34px;border-radius:50%;background:var(--green);color:#fff;font-weight:800;display:flex;align-items:center;justify-content:center;margin-bottom:10px}
 .process .step h3{font-size:1.1rem}
+
+/* =====================================================================
+   MOTION & VISUAL ENHANCEMENT PASS — restrained, purposeful, CSS-first.
+   Tokens, scroll reveals (SSR-safe), microinteractions, reduced-motion.
+   Content is only ever hidden when html.reveal-on is present (added by JS),
+   so without JS or under reduced-motion everything is immediately visible.
+   ===================================================================== */
+:root{
+  --dur-fast:150ms; --dur-std:280ms; --dur-slow:520ms;
+  --ease-enter:cubic-bezier(.22,1,.36,1);
+  --ease-exit:cubic-bezier(.4,0,1,1);
+  --ease-spring:cubic-bezier(.34,1.56,.64,1);
+}
+@keyframes rfUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+@keyframes rfPop{0%{transform:scale(0)}70%{transform:scale(1.12)}100%{transform:scale(1)}}
+@keyframes rfDraw{to{stroke-dashoffset:0}}
+
+/* ---- Buttons & links: hover lift, press compress, focus ---- */
+.btn{transition:transform var(--dur-fast) var(--ease-enter),background var(--dur-fast) var(--ease-enter),box-shadow var(--dur-fast) var(--ease-enter),border-color var(--dur-fast) var(--ease-enter)}
+.btn:hover{transform:translateY(-2px)}
+.btn:active{transform:translateY(0) scale(.985)}
+.btn-gold:hover{box-shadow:0 12px 24px -12px rgba(177,118,27,.6)}
+.btn-primary:hover{box-shadow:0 12px 24px -12px rgba(47,93,52,.5)}
+
+/* ---- Cards: elevation on hover, arrow nudge, focus-within ---- */
+.card{transition:transform var(--dur-std) var(--ease-enter),box-shadow var(--dur-std) var(--ease-enter),border-color var(--dur-std) var(--ease-enter)}
+.card--link:hover{transform:translateY(-4px);box-shadow:0 16px 30px -20px rgba(20,16,12,.35);border-color:var(--green-2)}
+.card--link:focus-within{border-color:var(--green-2)}
+.card .card-cta{display:inline-flex;align-items:center;gap:5px;transition:transform var(--dur-fast) var(--ease-enter)}
+.card--link:hover .card-cta{transform:translateX(4px)}
+
+/* ---- Header: shadow + slight shrink after scroll, active nav indicator ---- */
+.site-header{transition:box-shadow var(--dur-std) var(--ease-enter)}
+.site-header.scrolled{box-shadow:0 8px 22px -16px rgba(20,16,12,.45)}
+.site-header .hdr{transition:padding var(--dur-std) var(--ease-enter)}
+.site-header.scrolled .hdr{padding-top:8px;padding-bottom:8px}
+.nav a{position:relative}
+.nav a.active:not(.btn){color:var(--green)}
+.nav a.active:not(.btn)::after{content:"";position:absolute;left:0;right:0;bottom:-7px;height:2px;background:var(--gold);border-radius:2px}
+
+/* ---- Capability strip: icons replace dots, entrance, mobile snap ---- */
+.capbar li{gap:9px}
+.capbar li.has-icon::before{display:none}
+.capbar li svg{width:20px;height:20px;color:var(--gold-dk);flex:0 0 auto}
+@media(max-width:700px){
+  .capbar ul{flex-wrap:nowrap;justify-content:flex-start;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;gap:12px;padding-inline:2px}
+  .capbar li{scroll-snap-align:start;flex:0 0 auto;background:var(--paper);border:1px solid var(--line);border-radius:var(--r-pill,999px);padding:8px 14px}
+}
+
+/* ---- Hero graphic (blend -> bag -> pallet -> truck -> field) ---- */
+.hero-graphic{margin-top:30px;max-width:660px}
+.hero-graphic .node text{fill:var(--on-dark-muted);font-size:11px;font-weight:600;letter-spacing:.04em}
+.hero-graphic .glyph{stroke:var(--gold-soft);stroke-width:1.6;fill:none}
+.hero-graphic .dot{fill:var(--gold)}
+
+/* ---- Process: connecting line that draws once on view ---- */
+.process{position:relative}
+@media(min-width:701px){
+  .process::before{content:"";position:absolute;top:37px;left:16.6%;right:16.6%;height:2px;background:var(--line-2);z-index:0;transform-origin:left}
+}
+.process .step{z-index:1}
+.process .step .n{position:relative;z-index:2;transition:transform var(--dur-std) var(--ease-spring)}
+.process .step:hover .n{transform:scale(1.06)}
+
+/* ---- Success state: animated check ---- */
+.form-status--ok{display:flex;align-items:center;gap:10px}
+.form-status--ok::before{content:"";width:24px;height:24px;flex:0 0 auto;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='11' fill='%232e6e2e'/%3E%3Cpath d='M7 12.5l3.1 3.1L17 9' fill='none' stroke='white' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/contain no-repeat;animation:rfPop var(--dur-std) var(--ease-spring)}
+
+/* ---- Hero entrance stagger + capability entrance (motion users only) ---- */
+@media (prefers-reduced-motion: no-preference){
+  .hero .eyebrow,.hero h1,.hero p,.hero .cta-row,.hero .hero-graphic{opacity:0;animation:rfUp var(--dur-slow) var(--ease-enter) forwards}
+  .hero .eyebrow{animation-delay:40ms}
+  .hero h1{animation-delay:100ms}
+  .hero p{animation-delay:190ms}
+  .hero .cta-row{animation-delay:280ms}
+  .hero .hero-graphic{animation-delay:420ms}
+  .hero-graphic path.flow{stroke-dasharray:1;stroke-dashoffset:1;animation:rfDraw 1.3s var(--ease-enter) .55s forwards}
+  .capbar li{opacity:0;animation:rfUp var(--dur-std) var(--ease-enter) forwards}
+  .capbar li:nth-child(1){animation-delay:.42s}.capbar li:nth-child(2){animation-delay:.48s}
+  .capbar li:nth-child(3){animation-delay:.54s}.capbar li:nth-child(4){animation-delay:.60s}
+  .capbar li:nth-child(5){animation-delay:.66s}.capbar li:nth-child(6){animation-delay:.72s}
+  .capbar li:nth-child(7){animation-delay:.78s}
+}
+
+/* ---- Scroll reveal (only active when JS adds html.reveal-on) ---- */
+html.reveal-on [data-reveal],
+html.reveal-on .grid>.card,
+html.reveal-on .trust .item,
+html.reveal-on .quote-banner,
+html.reveal-on .process,
+html.reveal-on .section>.container>h2{
+  opacity:0;transform:translateY(16px);
+  transition:opacity var(--dur-std) var(--ease-enter),transform var(--dur-std) var(--ease-enter);
+}
+html.reveal-on [data-reveal].in,
+html.reveal-on .grid>.card.in,
+html.reveal-on .trust .item.in,
+html.reveal-on .quote-banner.in,
+html.reveal-on .process.in,
+html.reveal-on .section>.container>h2.in{opacity:1;transform:none}
+html.reveal-on .grid>.card:nth-child(2){transition-delay:.06s}
+html.reveal-on .grid>.card:nth-child(3){transition-delay:.12s}
+html.reveal-on .grid>.card:nth-child(4){transition-delay:.18s}
+html.reveal-on .grid>.card:nth-child(5){transition-delay:.24s}
+html.reveal-on .grid>.card:nth-child(6){transition-delay:.30s}
+@media(min-width:701px){
+  html.reveal-on .process::before{transform:scaleX(0);transition:transform var(--dur-slow) var(--ease-enter) .15s}
+  html.reveal-on .process.in::before{transform:scaleX(1)}
+}
+
+/* ---- Count-up stat ---- */
+.countup{font-family:inherit;font-weight:900;color:var(--green);font-variant-numeric:tabular-nums}
+
+/* ---- Reduced motion: everything visible, no motion ---- */
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important;scroll-behavior:auto!important}
+  html.reveal-on [data-reveal],html.reveal-on .grid>.card,html.reveal-on .trust .item,
+  html.reveal-on .quote-banner,html.reveal-on .process,html.reveal-on .section>.container>h2{opacity:1!important;transform:none!important}
+  .hero .eyebrow,.hero h1,.hero p,.hero .cta-row,.hero .hero-graphic,.capbar li{opacity:1!important;animation:none!important}
+  .process::before{transform:none!important}
+}

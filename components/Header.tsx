@@ -1,11 +1,26 @@
 "use client";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 import { primaryNav, utilityNav, site } from "@/content/site";
+
 export default function Header() {
   const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const pathname = usePathname();
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 10);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  const isActive = (href: string) =>
+    href !== "/" && (pathname === href || pathname.startsWith(href + "/"));
+
   return (
-    <header className="site-header">
+    <header className={"site-header" + (scrolled ? " scrolled" : "")}>
       <div className="container hdr">
         <Link href="/" className="brand" aria-label={`${site.name} home`}>
           <b>RODGERS FERTILIZER</b>
@@ -13,7 +28,10 @@ export default function Header() {
         </Link>
         <nav className="nav" aria-label="Primary">
           {primaryNav.map((l) => (
-            <Link key={l.href} href={l.href}>{l.label}</Link>
+            <Link key={l.href} href={l.href} className={isActive(l.href) ? "active" : undefined}
+              aria-current={isActive(l.href) ? "page" : undefined}>
+              {l.label}
+            </Link>
           ))}
           <Link className="btn btn-primary" href="/request-a-quote">Request a Quote</Link>
         </nav>

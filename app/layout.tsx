@@ -6,6 +6,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import StickyCTA from "@/components/StickyCTA";
 import Analytics from "@/components/Analytics";
+import Reveal from "@/components/Reveal";
 import Jsonld from "@/components/Jsonld";
 import { organizationSchema } from "@/lib/schema";
 import { SITE_URL, IS_STAGING } from "@/lib/env";
@@ -29,6 +30,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Footer />
         <StickyCTA />
         <Analytics />
+        <Reveal />
         <Jsonld data={organizationSchema()} />
       </body>
     </html>
