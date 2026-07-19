@@ -267,11 +267,14 @@ img{max-width:100%;display:block}
   .capbar li{scroll-snap-align:start;flex:0 0 auto;background:var(--paper);border:1px solid var(--line);border-radius:var(--r-pill,999px);padding:8px 14px}
 }
 
-/* ---- Hero graphic (blend -> bag -> pallet -> truck -> field) ---- */
-.hero-graphic{margin-top:30px;max-width:660px}
-.hero-graphic .node text{fill:var(--on-dark-muted);font-size:11px;font-weight:600;letter-spacing:.04em}
-.hero-graphic .glyph{stroke:var(--gold-soft);stroke-width:1.6;fill:none}
-.hero-graphic .dot{fill:var(--gold)}
+/* ---- Hero agricultural backdrop (branded SVG farmland + drop-in photo slot) ---- */
+.hero{position:relative;overflow:hidden}
+.hero>.container{position:relative;z-index:2}
+.hero-bg{position:absolute;inset:0;z-index:0}
+.hero-field{position:absolute;inset:0;width:100%;height:100%;display:block}
+/* If /public/media/hero.jpg exists it overrides the graphic; if not, it renders nothing. */
+.hero-photo{position:absolute;inset:0;background:center/cover no-repeat;background-image:url("/media/hero.jpg")}
+.hero-scrim{position:absolute;inset:0;background:linear-gradient(180deg,rgba(18,14,10,.58) 0%,rgba(18,14,10,.42) 42%,rgba(18,14,10,.82) 100%)}
 
 /* ---- Process: connecting line that draws once on view ---- */
 .process{position:relative}
