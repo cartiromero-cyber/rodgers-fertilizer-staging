@@ -291,13 +291,13 @@ img{max-width:100%;display:block}
 
 /* ---- Hero entrance stagger + capability entrance (motion users only) ---- */
 @media (prefers-reduced-motion: no-preference){
-  .hero .eyebrow,.hero h1,.hero p,.hero .cta-row,.hero .hero-graphic{opacity:0;animation:rfUp var(--dur-slow) var(--ease-enter) forwards}
+  .hero .eyebrow,.hero-h,.hero-sub,.hero .cta-row,.hero-trust,.hero-visual{opacity:0;animation:rfUp var(--dur-slow) var(--ease-enter) forwards}
   .hero .eyebrow{animation-delay:40ms}
-  .hero h1{animation-delay:100ms}
-  .hero p{animation-delay:190ms}
-  .hero .cta-row{animation-delay:280ms}
-  .hero .hero-graphic{animation-delay:420ms}
-  .hero-graphic path.flow{stroke-dasharray:1;stroke-dashoffset:1;animation:rfDraw 1.3s var(--ease-enter) .55s forwards}
+  .hero-h{animation-delay:110ms}
+  .hero-sub{animation-delay:210ms}
+  .hero .cta-row{animation-delay:300ms}
+  .hero-trust{animation-delay:380ms}
+  .hero-visual{animation-delay:300ms}
   .capbar li{opacity:0;animation:rfUp var(--dur-std) var(--ease-enter) forwards}
   .capbar li:nth-child(1){animation-delay:.42s}.capbar li:nth-child(2){animation-delay:.48s}
   .capbar li:nth-child(3){animation-delay:.54s}.capbar li:nth-child(4){animation-delay:.60s}
@@ -341,4 +341,65 @@ html.reveal-on .grid>.card:nth-child(6){transition-delay:.30s}
   html.reveal-on .quote-banner,html.reveal-on .process,html.reveal-on .section>.container>h2{opacity:1!important;transform:none!important}
   .hero .eyebrow,.hero h1,.hero p,.hero .cta-row,.hero .hero-graphic,.capbar li{opacity:1!important;animation:none!important}
   .process::before{transform:none!important}
+  .ops-node{opacity:1!important;animation:none!important}
+  .hero-ops .ops-track::before{transform:none!important}
 }
+
+/* =====================================================================
+   HERO UPPER-FOLD v2 — two-part composition, depth, ops graphic, trust.
+   ===================================================================== */
+.hero-inner{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.92fr);gap:clamp(24px,4vw,56px);align-items:center}
+.hero-copy{max-width:38rem}
+@media(max-width:920px){.hero-inner{grid-template-columns:1fr;gap:26px}}
+
+/* headline: tighter, gold accent on one phrase */
+.hero-h{font-size:clamp(2.1rem,5vw,3.4rem);line-height:1.03;letter-spacing:-.02em;color:#fff;font-weight:800}
+.hero-h .hl-accent{color:var(--gold-soft)}
+.hero-sub{color:var(--on-dark-muted);font-size:clamp(1.02rem,1.7vw,1.2rem);max-width:44ch;margin-top:16px}
+.hero .cta-row{margin-top:26px;gap:14px}
+
+/* hero trust proof row */
+.hero-trust{list-style:none;display:flex;flex-wrap:wrap;align-items:center;gap:9px 16px;margin:22px 0 0;padding:0}
+.hero-trust li{display:flex;align-items:center;color:var(--on-dark-muted);font-size:.85rem;font-weight:600;white-space:nowrap}
+.hero-trust li+li::before{content:"";width:4px;height:4px;border-radius:50%;background:var(--gold-soft);opacity:.6;margin-right:16px}
+
+/* operations graphic (right anchor) */
+.hero-visual{display:flex;justify-content:flex-end}
+@media(max-width:920px){.hero-visual{justify-content:center}}
+.hero-ops{position:relative;width:100%;max-width:360px;background:linear-gradient(180deg,rgba(35,50,36,.55),rgba(20,16,12,.45));border:1px solid rgba(217,184,115,.28);border-radius:var(--r-lg);padding:22px 24px;box-shadow:0 26px 50px -30px rgba(0,0,0,.7)}
+.ops-eyebrow{display:block;font-size:.66rem;font-weight:800;letter-spacing:.2em;text-transform:uppercase;color:var(--gold-soft);margin-bottom:16px}
+.ops-track{list-style:none;margin:0;padding:0;position:relative}
+.ops-track::before{content:"";position:absolute;left:22px;top:28px;bottom:28px;width:2px;background:linear-gradient(var(--gold-soft),rgba(217,184,115,.12));transform-origin:top}
+.ops-node{display:flex;align-items:center;gap:14px;padding:9px 0;position:relative}
+.ops-ico{width:44px;height:44px;flex:0 0 auto;border-radius:50%;background:rgba(20,16,12,.6);border:1.5px solid var(--gold-soft);display:flex;align-items:center;justify-content:center;color:var(--gold-soft);z-index:1}
+.ops-ico svg{width:23px;height:23px}
+.ops-label{color:var(--on-dark);font-weight:600;font-size:.98rem}
+@media (prefers-reduced-motion: no-preference){
+  .hero-ops .ops-track::before{transform:scaleY(0);animation:opsDraw 1.1s var(--ease-enter) .55s forwards}
+  .ops-node{opacity:0;animation:rfUp .5s var(--ease-enter) forwards}
+  .ops-node:nth-child(1){animation-delay:.60s}.ops-node:nth-child(2){animation-delay:.72s}
+  .ops-node:nth-child(3){animation-delay:.84s}.ops-node:nth-child(4){animation-delay:.96s}
+  .ops-node:nth-child(5){animation-delay:1.08s}
+}
+@keyframes opsDraw{to{transform:scaleY(1)}}
+@media(max-width:920px){
+  .hero-ops{max-width:none;padding:16px 14px}
+  .ops-track{display:flex;justify-content:space-between;gap:4px}
+  .ops-track::before{left:28px;right:28px;top:32px;bottom:auto;width:auto;height:2px;background:linear-gradient(90deg,var(--gold-soft),rgba(217,184,115,.12))}
+  .ops-node{flex-direction:column;gap:7px;padding:0;flex:1;text-align:center}
+  .ops-ico{width:40px;height:40px}
+  .ops-label{font-size:.68rem;line-height:1.2}
+}
+
+/* capability strip: depth + gold hover */
+.capbar{box-shadow:inset 0 1px 0 rgba(217,184,115,.35)}
+.capbar ul{padding-block:18px}
+.capbar li{transition:color var(--dur-fast) var(--ease-enter)}
+.capbar li:hover{color:var(--green-dk)}
+.capbar li svg{transition:color var(--dur-fast) var(--ease-enter)}
+.capbar li:hover svg{color:var(--gold)}
+
+/* buyer pathway cards: category icon + hover fill */
+.path-ico{display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:10px;background:var(--field);border:1px solid var(--line);color:var(--green);margin-bottom:6px;transition:background var(--dur-std) var(--ease-enter),color var(--dur-std) var(--ease-enter),border-color var(--dur-std) var(--ease-enter)}
+.path-ico svg{width:24px;height:24px}
+.card--link:hover .path-ico{background:var(--green);color:#fff;border-color:var(--green)}
